@@ -1,2 +1,7 @@
-<h2>Your Personalised Exercise Plan</h2>
+{% extends "base.html" %}
+{% block title %}Exercise Plan{% endblock %}
+
+{% block content %}
+<h1>Your Exercise Plan</h1>
 <p>{{ plan }}</p>
+{% endblock %}

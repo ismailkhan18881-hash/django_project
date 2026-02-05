@@ -1,7 +1,56 @@
-<h2>Your Smoking Profile</h2>
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
 
-<form method="post">
+{% block content %}
+<div style="max-width: 800px; margin: 40px auto; padding: 24px; background: #fff; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.08);">
+  <h1 style="margin-top: 0;">Your Profile</h1>
+  <p style="color: #555;">Complete your details so QuitCig can generate a safe personalised plan.</p>
+
+  <form method="post" style="margin-top: 20px;">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Generate Exercise Plan</button>
-</form>
+
+    <div style="display: grid; gap: 16px;">
+      <div>
+        <label><strong>Age</strong></label><br>
+        {{ form.age }}
+      </div>
+
+      <div>
+        <label><strong>Cigarettes per day</strong></label><br>
+        {{ form.cigarettes_per_day }}
+      </div>
+
+      <div>
+        <label><strong>Do you have asthma / breathing conditions?</strong></label><br>
+        {{ form.has_asthma }}
+      </div>
+
+      <div>
+        <label><strong>Are you able to run?</strong></label><br>
+        {{ form.can_run }}
+      </div>
+
+      <div>
+        <label><strong>Are you able to swim?</strong></label><br>
+        {{ form.can_swim }}
+      </div>
+
+      <div>
+        <label><strong>Activity level</strong></label><br>
+        {{ form.activity_level }}
+      </div>
+    </div>
+
+    <button type="submit" style="margin-top: 22px; padding: 10px 18px; border: none; border-radius: 8px; background: #16a34a; color: white; font-weight: 600; cursor: pointer;">
+      Save Profile
+    </button>
+  </form>
+
+  {% if form.errors %}
+    <div style="margin-top: 18px; padding: 12px; background: #fee2e2; border-radius: 8px; color: #991b1b;">
+      <strong>Please fix the following:</strong>
+      {{ form.errors }}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

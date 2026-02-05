@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div style="max-width: 1100px; margin: 40px auto;">
+
+  <h1>Welcome back</h1>
+  <p style="color:#555;">Here’s a quick overview of your QuitCig progress.</p>
+
+  <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:16px; margin-top:24px;">
+    <div class="card">Days Smoke-Free<br><strong>—</strong></div>
+    <div class="card">Cigarettes Avoided<br><strong>—</strong></div>
+    <div class="card">Health Score<br><strong>—</strong></div>
+    <div class="card">Workouts Completed<br><strong>—</strong></div>
+  </div>
+
+  <div style="display:grid; grid-template-columns: 2fr 1fr; gap:24px; margin-top:32px;">
+    <div class="card">
+      <h3>Today’s Snapshot</h3>
+      <p>Cigarettes smoked today:
+        <strong>{{ last_log.cigarettes_smoked|default:"Not logged" }}</strong>
+      </p>
+      <p>Craving level:
+        <strong>{{ last_log.craving_level|default:"Not logged" }}/10</strong>
+      </p>
+
+      <a class="link-btn" href="{% url 'progress' %}">Log progress</a>
+    </div>
+
+    <div class="card">
+      <h3>Quick Actions</h3>
+
+      <div class="quick-actions">
+        <a href="{% url 'profile' %}" class="action-card">
+          <div class="action-icon">👤</div>
+          <div class="action-text">
+            <div class="action-title">Update Profile</div>
+            <div class="action-subtitle">Edit your health & activity details</div>
+          </div>
+        </a>
+
+        <a href="{% url 'plan' %}" class="action-card">
+          <div class="action-icon">🏃</div>
+          <div class="action-text">
+            <div class="action-title">Exercise Plan</div>
+            <div class="action-subtitle">View your personalised routine</div>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<style>
+.card {
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* small button-style link for "Log progress" */
+.link-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 14px;
+  background: #16a34a;
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+}
+.link-btn:hover {
+  background: #15803d;
+}
+</style>
+{% endblock %}

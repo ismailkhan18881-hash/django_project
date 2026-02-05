@@ -1,7 +1,48 @@
-<h2>Log Today’s Progress</h2>
+{% extends "base.html" %}
+{% block title %}Log Progress{% endblock %}
 
-<form method="post">
+{% block content %}
+<div style="max-width: 800px; margin: 40px auto; padding: 24px; background: #fff; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.08);">
+  <h1>Log Progress</h1>
+  <p style="color: #555;">Track your daily smoking and craving level.</p>
+
+  <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save Progress</button>
-</form>
+
+    <div style="margin-bottom: 20px;">
+      <label><strong>Cigarettes smoked today</strong></label><br>
+      {{ form.cigarettes_smoked }}
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <label>
+        <strong>Craving level:</strong>
+        <span id="cravingValue" style="font-weight: bold; margin-left: 8px;">{{ form.craving_level.value|default:"0" }}</span>/10
+      </label><br>
+      {{ form.craving_level }}
+      <div style="font-size: 0.85em; color: #666;">0 = no craving, 10 = extreme craving</div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <label><strong>Notes</strong></label><br>
+      {{ form.notes }}
+    </div>
+
+    <button type="submit" style="padding: 10px 18px; border: none; border-radius: 8px; background: #16a34a; color: white; font-weight: 600; cursor: pointer;">
+      Save
+    </button>
+  </form>
+</div>
+
+<script>
+  const slider = document.querySelector('input[type="range"]');
+  const output = document.getElementById('cravingValue');
+
+  if (slider && output) {
+    output.innerText = slider.value;
+    slider.oninput = function () {
+      output.innerText = this.value;
+    };
+  }
+</script>
+{% endblock %}
