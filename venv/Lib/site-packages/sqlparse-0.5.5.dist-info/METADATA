@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: sqlparse
-Version: 0.5.4
+Version: 0.5.5
 Summary: A non-validating SQL parser.
 Project-URL: Home, https://github.com/andialbrecht/sqlparse
 Project-URL: Documentation, https://sqlparse.readthedocs.io/

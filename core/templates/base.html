@@ -2,26 +2,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}QuitCig{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- The title block lets each page set its own browser tab title -->
+  <title>{% block title %}QuitCig{% endblock %}</title>
+  <!-- Load the main stylesheet from the static folder -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <!-- Load Chart.js from a CDN so I can use it on the dashboard -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
+<!-- Navigation bar shown on every page -->
 <nav class="navbar">
-    <h2 class="logo">QuitCig</h2>
-    <div class="nav-links">
-        <a href="{% url 'dashboard' %}">Dashboard</a>
-        <a href="{% url 'profile' %}">Profile</a>
-        <a href="{% url 'progress' %}">Log Progress</a>
-        <a href="{% url 'plan' %}">Plan</a>
-        <a href="{% url 'logout' %}">Logout</a>
-    </div>
+  <div class="navbar-brand">
+    <!-- The logo icon and app name -->
+    <div class="navbar-logo">✦</div>
+    <span class="navbar-title">QuitCig</span>
+  </div>
+
+  <div class="nav-links">
+    <!-- Each link checks if it matches the current page and adds the active class -->
+    <!-- The active class highlights the current page in the navbar -->
+    <a href="{% url 'dashboard' %}"
+       class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+      📊 Dashboard
+    </a>
+
+    <a href="{% url 'progress' %}"
+       class="nav-link {% if request.resolver_match.url_name == 'progress' %}active{% endif %}">
+      📋 Log Progress
+    </a>
+
+    <a href="{% url 'plan' %}"
+       class="nav-link {% if request.resolver_match.url_name == 'plan' %}active{% endif %}">
+      🏃 Exercise Plan
+    </a>
+
+    <a href="{% url 'profile' %}"
+       class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+      👤 Profile
+    </a>
+
+    <!-- Logout uses a form with POST instead of a regular link -->
+    <!-- This is required by Django for security reasons -->
+    <!-- A GET request to logout would not work and gives a 405 error -->
+    <form method="post" action="{% url 'logout' %}" style="display:inline; margin:0;">
+      {% csrf_token %}
+      <button type="submit" class="nav-link logout-link"
+              style="background:none; border:none; cursor:pointer;
+                     font-family:inherit; font-size:14px;">
+        Logout
+      </button>
+    </form>
+  </div>
 </nav>
 
-<div class="container">
-    {% block content %}{% endblock %}
+<!-- Main page wrapper - all page content goes inside here -->
+<div class="page-wrapper">
+
+  <!-- Show any success or error messages from the views -->
+  <!-- Django messages are added using messages.success() in views.py -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Each template fills in this block with its own content -->
+  {% block content %}{% endblock %}
+
 </div>
 
 </body>

@@ -1,56 +1,140 @@
 {% extends "base.html" %}
-{% block title %}Profile{% endblock %}
+{% block title %}Profile – QuitCig{% endblock %}
 
 {% block content %}
-<div style="max-width: 800px; margin: 40px auto; padding: 24px; background: #fff; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.08);">
-  <h1 style="margin-top: 0;">Your Profile</h1>
-  <p style="color: #555;">Complete your details so QuitCig can generate a safe personalised plan.</p>
 
-  <form method="post" style="margin-top: 20px;">
+<!-- Page header -->
+<div class="page-header">
+  <h1>Your Profile</h1>
+  <p>Update your details here. Changes will be used to adjust your exercise plan.</p>
+</div>
+
+<div class="card" style="max-width:600px;">
+  <form method="post">
     {% csrf_token %}
 
-    <div style="display: grid; gap: 16px;">
-      <div>
-        <label><strong>Age</strong></label><br>
+    <!-- Age and cigarettes side by side in a two column grid -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+
+      <div class="form-group">
+        <label>Age</label>
         {{ form.age }}
       </div>
 
-      <div>
-        <label><strong>Cigarettes per day</strong></label><br>
+      <div class="form-group">
+        <label>Cigarettes per day (usual amount)</label>
         {{ form.cigarettes_per_day }}
       </div>
 
-      <div>
-        <label><strong>Do you have asthma / breathing conditions?</strong></label><br>
-        {{ form.has_asthma }}
-      </div>
+    </div>
 
-      <div>
-        <label><strong>Are you able to run?</strong></label><br>
-        {{ form.can_run }}
-      </div>
+    <!-- Activity level dropdown -->
+    <div class="form-group">
+      <label>Fitness Level</label>
+      {{ form.fitness_level }}
+    </div>
 
-      <div>
-        <label><strong>Are you able to swim?</strong></label><br>
-        {{ form.can_swim }}
-      </div>
+    <!-- Time available dropdown -->
+    <div class="form-group">
+      <label>Time available for exercise daily</label>
+      {{ form.time_available }}
+    </div>
 
-      <div>
-        <label><strong>Activity level</strong></label><br>
-        {{ form.activity_level }}
+    <!-- Lifestyle dropdown -->
+    <div class="form-group">
+      <label>Daily lifestyle</label>
+      {{ form.lifestyle }}
+    </div>
+
+    <!-- Motivation level dropdown -->
+    <div class="form-group">
+      <label>Motivation level</label>
+      {{ form.motivation_level }}
+    </div>
+
+    <!-- Health and ability checkboxes grouped in a styled box -->
+    <div style="background:#f9f9ff; border:1px solid #ede9fe;
+                border-radius:12px; padding:16px; margin-bottom:18px;">
+      <p style="font-size:13px; font-weight:600; color:#4b5563; margin-bottom:12px;">
+        Health and Ability — used to keep your plan safe
+      </p>
+
+      <div style="display:flex; flex-direction:column; gap:12px;">
+
+        <!-- Medical conditions as checkboxes -->
+        <div style="display:flex; align-items:center; gap:10px;">
+          {{ form.has_asthma }}
+          <label style="font-size:14px; cursor:pointer;">I have asthma</label>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          {{ form.has_heart_condition }}
+          <label style="font-size:14px; cursor:pointer;">I have a heart condition</label>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          {{ form.has_joint_problems }}
+          <label style="font-size:14px; cursor:pointer;">I have joint problems</label>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          {{ form.has_diabetes }}
+          <label style="font-size:14px; cursor:pointer;">I have diabetes</label>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          {{ form.has_injuries }}
+          <label style="font-size:14px; cursor:pointer;">I have injuries that limit movement</label>
+        </div>
+
+        <!-- Activities they can do as checkboxes -->
+        <div style="display:flex; align-items:center; gap:10px;">
+          {{ form.can_walk }}
+          <label style="font-size:14px; cursor:pointer;">I can walk</label>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          {{ form.can_run }}
+          <label style="font-size:14px; cursor:pointer;">I can run or jog</label>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          {{ form.can_swim }}
+          <label style="font-size:14px; cursor:pointer;">I can swim</label>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          {{ form.can_cycle }}
+          <label style="font-size:14px; cursor:pointer;">I can cycle</label>
+        </div>
+
+        <!-- General health and breathlessness dropdowns -->
+        <div class="form-group">
+          <label>General health</label>
+          {{ form.general_health }}
+        </div>
+
+        <div class="form-group">
+          <label>Do you get breathless during light activity?</label>
+          {{ form.breathlessness }}
+        </div>
+
       </div>
     </div>
 
-    <button type="submit" style="margin-top: 22px; padding: 10px 18px; border: none; border-radius: 8px; background: #16a34a; color: white; font-weight: 600; cursor: pointer;">
-      Save Profile
-    </button>
+    <!-- Save button -->
+    <button type="submit" class="btn-primary">Save Profile</button>
+
   </form>
 
+  <!-- Show any form validation errors -->
   {% if form.errors %}
-    <div style="margin-top: 18px; padding: 12px; background: #fee2e2; border-radius: 8px; color: #991b1b;">
+    <div class="alert alert-error" style="margin-top:16px;">
       <strong>Please fix the following:</strong>
       {{ form.errors }}
     </div>
   {% endif %}
+
 </div>
+
 {% endblock %}

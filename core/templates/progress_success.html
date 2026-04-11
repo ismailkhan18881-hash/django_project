@@ -1,8 +1,50 @@
 {% extends "base.html" %}
-{% block title %}Saved{% endblock %}
+{% block title %}Progress Saved – QuitCig{% endblock %}
 
 {% block content %}
-<h1>Progress Saved</h1>
-<p>Your progress has been recorded successfully.</p>
-<a href="/profile/">Back to profile</a>
+
+<!-- ── PROGRESS SUCCESS PAGE ──────────────────────────────────────
+     This page is shown after the user successfully saves a log entry.
+     It confirms their entry was saved and gives them two options:
+     go back to the dashboard or log another entry.
+     The actual saving happens in log_progress() in views.py.
+──────────────────────────────────────────────────────────────────── -->
+
+<div class="card" style="max-width:600px; margin:60px auto; text-align:center;">
+
+  <!-- Success icon -->
+  <div style="font-size:60px; margin-bottom:16px;">✅</div>
+
+  <!-- Confirmation heading -->
+  <h1 style="font-size:24px; font-weight:700; margin-bottom:8px;">
+    Progress Saved!
+  </h1>
+
+  <!-- Encouraging message to keep the user motivated -->
+  <p style="color:#6b7280; font-size:15px; margin-bottom:28px;">
+    Great work logging today. Every entry helps you understand
+    your patterns and stay on track.
+  </p>
+
+  <!-- Two action buttons -->
+  <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+
+    <!-- Primary button goes back to the dashboard -->
+    <a href="{% url 'dashboard' %}" class="btn-primary"
+       style="width:auto; padding:12px 28px;">
+      Back to Dashboard
+    </a>
+
+    <!-- Secondary button lets them log another entry -->
+    <a href="{% url 'progress' %}"
+       style="padding:12px 28px; border-radius:10px;
+              border:2px solid #6c3fc5; color:#6c3fc5;
+              text-decoration:none; font-weight:600; font-size:14px;">
+      Log Another Entry
+    </a>
+
+  </div>
+
+</div>
+
 {% endblock %}

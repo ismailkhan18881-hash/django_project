@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% block title %}Getting Started – QuitCig{% endblock %}
+
+{% block content %}
+
+<!-- Page header introducing the questionnaire -->
+<div class="page-header" style="text-align:center; margin-bottom:32px;">
+  <h1>Welcome to QuitCig!</h1>
+  <p>Answer these questions so we can build your personalised exercise plan.</p>
+  <p style="font-size:13px; color:#6b7280;">
+    Takes about 2 minutes. Be honest for the best results!
+  </p>
+</div>
+
+<!-- The questionnaire form posts back to the same URL -->
+<form method="post" style="max-width:700px; margin:0 auto;">
+  {% csrf_token %}
+
+  <!-- ── SECTION 1: Smoking Behaviour ────────────────────────── -->
+  <div class="card" style="margin-bottom:24px;">
+    <h3 style="font-size:16px; font-weight:700; color:#6c3fc5; margin-bottom:20px;">
+      Section 1 — Smoking Behaviour
+    </h3>
+
+    <!-- Q1 - cigarettes per day -->
+    <div class="form-group">
+      <label>Q1. How many cigarettes do you smoke per day?</label>
+      {{ form.cigarettes_per_day }}
+    </div>
+
+    <!-- Q2 - how long they have been smoking -->
+    <div class="form-group">
+      <label>Q2. How long have you been smoking?</label>
+      {{ form.smoking_duration }}
+    </div>
+
+    <!-- Q3 - when cravings hit hardest -->
+    <div class="form-group">
+      <label>Q3. When do cravings hit you hardest?</label>
+      {{ form.craving_trigger }}
+    </div>
+
+    <!-- Q4 - previous quit attempts -->
+    <div class="form-group">
+      <label>Q4. Have you tried to quit before?</label>
+      {{ form.quit_attempts }}
+    </div>
+  </div>
+
+  <!-- ── SECTION 2: Health and Medical ───────────────────────── -->
+  <div class="card" style="margin-bottom:24px;">
+    <h3 style="font-size:16px; font-weight:700; color:#6c3fc5; margin-bottom:20px;">
+      Section 2 — Health and Medical
+    </h3>
+
+    <!-- Q5 - medical conditions as checkboxes -->
+    <div class="form-group">
+      <label style="margin-bottom:10px; display:block;">
+        Q5. Do you have any of the following conditions?
+        <span style="font-size:12px; color:#6b7280;">(tick all that apply)</span>
+      </label>
+
+      <!-- Each condition is its own checkbox -->
+      <div style="display:flex; flex-direction:column; gap:10px;
+                  background:#f9f9ff; border:1px solid #ede9fe;
+                  border-radius:10px; padding:14px;">
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          {{ form.has_asthma }}
+          <label style="font-size:14px; cursor:pointer;">Asthma</label>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          {{ form.has_heart_condition }}
+          <label style="font-size:14px; cursor:pointer;">Heart condition</label>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          {{ form.has_joint_problems }}
+          <label style="font-size:14px; cursor:pointer;">Joint problems (knees or hips)</label>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          {{ form.has_diabetes }}
+          <label style="font-size:14px; cursor:pointer;">Diabetes</label>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Q6 - breathlessness during light activity -->
+    <div class="form-group">
+      <label>
+        Q6. Do you get breathless during light activity?
+        <span style="font-size:12px; color:#6b7280;">(for example walking up stairs)</span>
+      </label>
+      {{ form.breathlessness }}
+    </div>
+
+    <!-- Q7 - injuries -->
+    <div class="form-group">
+      <label>Q7. Do you have any injuries that limit movement?</label>
+      <div style="display:flex; align-items:center; gap:10px; margin-top:6px;">
+        {{ form.has_injuries }}
+        <label style="font-size:14px; cursor:pointer;">
+          Yes I have injuries that affect my movement
+        </label>
+      </div>
+    </div>
+
+    <!-- Q8 - general health rating -->
+    <div class="form-group">
+      <label>Q8. How would you describe your general health?</label>
+      {{ form.general_health }}
+    </div>
+  </div>
+
+  <!-- ── SECTION 3: Fitness and Ability ──────────────────────── -->
+  <div class="card" style="margin-bottom:24px;">
+    <h3 style="font-size:16px; font-weight:700; color:#6c3fc5; margin-bottom:20px;">
+      Section 3 — Fitness and Ability
+    </h3>
+
+    <!-- Q9 - which activities they can do -->
+    <div class="form-group">
+      <label style="margin-bottom:10px; display:block;">
+        Q9. Which activities can you do comfortably?
+        <span style="font-size:12px; color:#6b7280;">(tick all that apply)</span>
+      </label>
+
+      <div style="display:flex; flex-direction:column; gap:10px;
+                  background:#f9f9ff; border:1px solid #ede9fe;
+                  border-radius:10px; padding:14px;">
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          {{ form.can_walk }}
+          <label style="font-size:14px; cursor:pointer;">Walking</label>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          {{ form.can_run }}
+          <label style="font-size:14px; cursor:pointer;">Jogging or Running</label>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          {{ form.can_swim }}
+          <label style="font-size:14px; cursor:pointer;">Swimming</label>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          {{ form.can_cycle }}
+          <label style="font-size:14px; cursor:pointer;">Cycling</label>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Q10 - current fitness level -->
+    <div class="form-group">
+      <label>Q10. How would you rate your current fitness level?</label>
+      {{ form.fitness_level }}
+    </div>
+
+    <!-- Q11 - time available for exercise each day -->
+    <div class="form-group">
+      <label>Q11. How much time can you spend exercising daily?</label>
+      {{ form.time_available }}
+    </div>
+  </div>
+
+  <!-- ── SECTION 4: Motivation and Lifestyle ─────────────────── -->
+  <div class="card" style="margin-bottom:24px;">
+    <h3 style="font-size:16px; font-weight:700; color:#6c3fc5; margin-bottom:20px;">
+      Section 4 — Motivation and Lifestyle
+    </h3>
+
+    <!-- Q12 - open text question about why they want to quit -->
+    <!-- This is the only free text question in the questionnaire -->
+    <!-- The answer is stored and shown back to the user as a motivation reminder -->
+    <div class="form-group">
+      <label>
+        Q12. Why do you want to quit smoking?
+        <span style="font-size:12px; color:#6b7280;">
+          (write in your own words — this will be shown back to you as motivation)
+        </span>
+      </label>
+      {{ form.quit_reason }}
+    </div>
+
+    <!-- Q13 - motivation level right now -->
+    <div class="form-group">
+      <label>Q13. How motivated are you to quit right now?</label>
+      {{ form.motivation_level }}
+    </div>
+
+    <!-- Q14 - daily lifestyle description -->
+    <div class="form-group">
+      <label>Q14. How would you describe your daily lifestyle?</label>
+      {{ form.lifestyle }}
+    </div>
+
+    <!-- Q15 - how they feel about starting -->
+    <!-- This controls the tone of motivational messages shown to them -->
+    <div class="form-group">
+      <label>Q15. How are you feeling about starting this journey?</label>
+      {{ form.starting_feeling }}
+    </div>
+
+    <!-- Age field kept from the original profile -->
+    <div class="form-group">
+      <label>Your Age</label>
+      {{ form.age }}
+    </div>
+
+  </div>
+
+  <!-- Submit button at the bottom of the form -->
+  <div style="text-align:center; margin-bottom:40px;">
+    <button type="submit" class="btn-primary"
+            style="width:auto; padding:14px 40px; font-size:16px;">
+      Build My Personalised Plan
+    </button>
+    <p style="font-size:12px; color:#6b7280; margin-top:12px;">
+      Your answers are private and only used to personalise your experience.
+    </p>
+  </div>
+
+</form>
+
+{% endblock %}

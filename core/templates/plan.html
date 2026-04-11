@@ -1,7 +1,330 @@
 {% extends "base.html" %}
-{% block title %}Exercise Plan{% endblock %}
+{% block title %}Exercise Plan – QuitCig{% endblock %}
 
 {% block content %}
-<h1>Your Exercise Plan</h1>
-<p>{{ plan }}</p>
+
+<!-- Page header -->
+<div class="page-header">
+  <h1>Your Exercise Plan</h1>
+  <p>A personalised plan designed for you, based on your health and fitness level.</p>
+</div>
+
+
+<!-- ── SCORE, TIER AND TREND CARDS ───────────────────────────────
+     These three cards show the user how the algorithm made its decision.
+     score comes from calculate_score() in utils.py.
+     tier is worked out in plan_view() in views.py based on the score.
+     trend shows whether cravings are getting better or worse over time.
+     Showing these values makes the system transparent to the user.
+──────────────────────────────────────────────────────────────────── -->
+{% if score is not None %}
+<div style="display:grid; grid-template-columns:1fr 1fr 1fr;
+            gap:16px; margin-bottom:24px;">
+
+  <!-- Algorithm score card - purple gradient to make it stand out -->
+  <div style="background:linear-gradient(135deg, #6c3fc5, #4f46e5);
+              border-radius:16px; padding:20px; color:white; text-align:center;">
+    <div style="font-size:13px; opacity:0.85; margin-bottom:4px;">
+      Your Algorithm Score
+    </div>
+    <!-- The score is a number between 0 and 100 calculated in utils.py -->
+    <div style="font-size:42px; font-weight:700;">
+      {{ score }}
+    </div>
+    <div style="font-size:12px; opacity:0.75;">
+      out of 100
+    </div>
+  </div>
+
+  <!-- Plan tier card - shows which exercise intensity group they are in -->
+  <div style="background:white; border-radius:16px; padding:20px;
+              text-align:center; box-shadow:0 4px 16px rgba(0,0,0,0.06);">
+    <div style="font-size:13px; color:#6b7280; margin-bottom:4px;">
+      Plan Tier
+    </div>
+    <div style="font-size:28px; font-weight:700; color:#6c3fc5;">
+      <!-- Show different emoji and text depending on which tier they are in -->
+      {% if tier == "Active" %}
+        Active
+      {% elif tier == "Moderate" %}
+        Moderate
+      {% else %}
+        Gentle
+      {% endif %}
+    </div>
+    <!-- Show the score range for their tier so they understand the system -->
+    <div style="font-size:12px; color:#6b7280; margin-top:4px;">
+      {% if tier == "Active" %}
+        Score 70 to 100
+      {% elif tier == "Moderate" %}
+        Score 40 to 69
+      {% else %}
+        Score 0 to 39
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Craving trend card - shows direction cravings are heading -->
+  <div style="background:white; border-radius:16px; padding:20px;
+              text-align:center; box-shadow:0 4px 16px rgba(0,0,0,0.06);">
+    <div style="font-size:13px; color:#6b7280; margin-bottom:4px;">
+      Craving Trend
+    </div>
+
+    <!-- trend comes from calculate_score() in utils.py -->
+    <!-- It compares the last 3 days against the 3 days before that -->
+    {% if trend == "improving" %}
+      <!-- Green for improving - cravings going down -->
+      <div style="font-size:24px; font-weight:700; color:#16a34a;">
+        Improving
+      </div>
+      <div style="font-size:12px; color:#16a34a; margin-top:4px;">
+        Cravings getting better — plan intensity increased
+      </div>
+
+    {% elif trend == "worsening" %}
+      <!-- Red for worsening - cravings going up -->
+      <div style="font-size:24px; font-weight:700; color:#dc2626;">
+        Worsening
+      </div>
+      <div style="font-size:12px; color:#dc2626; margin-top:4px;">
+        Cravings getting harder — plan eased to support you
+      </div>
+
+    {% else %}
+      <!-- Grey for stable - cravings staying about the same -->
+      <div style="font-size:24px; font-weight:700; color:#6b7280;">
+        Stable
+      </div>
+      <div style="font-size:12px; color:#6b7280; margin-top:4px;">
+        Cravings holding steady — plan adjusted accordingly
+      </div>
+    {% endif %}
+
+  </div>
+
+</div>
+
+<!-- Plain English explanation of how the score was calculated -->
+<!-- This makes the algorithm feel transparent and trustworthy -->
+<div style="background:#f9f9ff; border:1px solid #ede9fe; border-radius:12px;
+            padding:14px 18px; margin-bottom:24px; font-size:13px; color:#4b5563;">
+  How your score works: Your score started at 50. Medical conditions
+  reduced it for safety. Fitness, motivation and abilities increased it.
+  Your recent craving trend adjusted it further. The final score of
+  <strong>{{ score }}/100</strong> places you in the
+  <strong>{{ tier }}</strong> plan tier.
+</div>
+{% endif %}
+
+
+<!-- ── MAIN LAYOUT: EXERCISES LEFT, PROFILE SIDEBAR RIGHT ────────
+     Two column layout using the plan-layout CSS class.
+     Left column is wider and shows the exercises.
+     Right column is narrower and shows their profile summary.
+──────────────────────────────────────────────────────────────────── -->
+<div class="plan-layout">
+
+  <!-- ── LEFT COLUMN: Exercise list ─────────────────────────── -->
+  <div>
+    <div class="card" style="margin-bottom:20px;">
+
+      <!-- Header row showing title and exercise count -->
+      <div style="display:flex; justify-content:space-between;
+                  align-items:center; margin-bottom:18px;">
+        <h3 style="font-size:16px; font-weight:700;">
+          Today's Exercise Plan
+        </h3>
+        <!-- exercises|length counts how many exercises were returned -->
+        <span style="font-size:13px; color:#6b7280;">
+          {{ exercises|length }} exercises
+        </span>
+      </div>
+
+      <!-- exercises comes from generate_exercise_plan() in utils.py -->
+      {% if exercises %}
+        {% for ex in exercises %}
+          <!-- Each exercise is shown as a card with icon, details and reason -->
+          <div class="plan-exercise-card">
+
+            <!-- Icon in a small purple box on the left -->
+            <div class="plan-exercise-icon">{{ ex.icon }}</div>
+
+            <!-- Exercise details on the right -->
+            <div class="plan-exercise-body" style="flex:1;">
+
+              <!-- Exercise name with intensity badge next to it -->
+              <h4>
+                {{ ex.name }}
+                <!-- intensity_class controls the badge colour using CSS -->
+                <span class="intensity-badge badge-{{ ex.intensity_class }}">
+                  {{ ex.intensity }}
+                </span>
+              </h4>
+
+              <!-- Duration and intensity shown in smaller text -->
+              <p>{{ ex.duration }} &nbsp;|&nbsp; {{ ex.intensity }}</p>
+
+              <!-- The reason box explains why this exercise was chosen -->
+              <!-- This makes the system feel transparent not like a black box -->
+              <div class="plan-why">
+                <strong>Why this exercise:</strong> {{ ex.reason }}
+              </div>
+
+            </div>
+          </div>
+        {% endfor %}
+
+      {% else %}
+        <!-- Shown if no exercises were generated -->
+        <!-- This happens if the profile is missing key information -->
+        <div style="padding:20px; text-align:center;">
+          <p style="color:#6b7280; margin-bottom:14px;">
+            Complete your profile so we can generate your personalised plan.
+          </p>
+          <a href="{% url 'profile' %}" class="btn-primary"
+             style="width:auto; display:inline-block;">
+            Go to Profile
+          </a>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- ── SAFETY SECTION ─────────────────────────────────────
+         Only shown if exercises were generated successfully.
+         Explains the four factors used to personalise the plan.
+         This reassures users that the system considered their safety.
+    ────────────────────────────────────────────────────────── -->
+    {% if exercises %}
+    <div class="safety-card">
+      <h3>Your Safety Comes First</h3>
+      <p style="font-size:13px; color:#4b5563; margin-top:8px;">
+        This plan is personalised based on your unique profile.
+        We consider multiple factors to keep it safe, effective and enjoyable.
+      </p>
+
+      <!-- Four safety factors in a two column grid -->
+      <div class="safety-grid">
+        <div class="safety-item">
+          <strong>Age</strong>
+          Exercises adjusted for your age group
+        </div>
+        <div class="safety-item">
+          <strong>Health Conditions</strong>
+          Adapted for asthma and joint health
+        </div>
+        <div class="safety-item">
+          <strong>Activity Level</strong>
+          Matched to your current fitness
+        </div>
+        <div class="safety-item">
+          <strong>Craving Trend</strong>
+          Adjusted based on your recent pattern
+        </div>
+      </div>
+
+      <!-- Medical disclaimer at the bottom -->
+      <p style="font-size:12px; color:#6b7280; margin-top:14px;">
+        Reminder: Always skip exercises if you are not feeling well.
+        Listen to your body and consult your doctor before starting
+        any new exercise routine.
+      </p>
+    </div>
+    {% endif %}
+
+  </div>
+
+
+  <!-- ── RIGHT COLUMN: Profile sidebar ──────────────────────── -->
+  <!-- Shows the key profile values that were used to calculate the plan -->
+  <!-- This makes it clear to the user exactly what data drove the result -->
+  <div>
+    <div class="card profile-sidebar">
+      <h3 style="font-size:16px; font-weight:700; margin-bottom:16px;">
+        Your Profile
+      </h3>
+
+      <!-- Each row shows one profile value -->
+      <!-- These come from the profile object passed in from plan_view() -->
+
+      <div class="profile-row">
+        <span class="profile-row-label">Age</span>
+        <span class="profile-row-value">
+          {{ profile.age|default:"—" }} years
+        </span>
+      </div>
+
+      <div class="profile-row">
+        <span class="profile-row-label">Asthma</span>
+        <!-- yesno filter converts True/False to Yes/No -->
+        <span class="profile-row-value">
+          {{ profile.has_asthma|yesno:"Yes,No" }}
+        </span>
+      </div>
+
+      <div class="profile-row">
+        <span class="profile-row-label">Heart Condition</span>
+        <span class="profile-row-value">
+          {{ profile.has_heart_condition|yesno:"Yes,No" }}
+        </span>
+      </div>
+
+      <div class="profile-row">
+        <span class="profile-row-label">Can Run</span>
+        <span class="profile-row-value">
+          {{ profile.can_run|yesno:"Yes,No" }}
+        </span>
+      </div>
+
+      <div class="profile-row">
+        <span class="profile-row-label">Can Swim</span>
+        <span class="profile-row-value">
+          {{ profile.can_swim|yesno:"Yes,No" }}
+        </span>
+      </div>
+
+      <div class="profile-row">
+        <span class="profile-row-label">Fitness Level</span>
+        <!-- capfirst capitalises the first letter of the value -->
+        <span class="profile-row-value">
+          {{ profile.fitness_level|capfirst|default:"—" }}
+        </span>
+      </div>
+
+      <div class="profile-row">
+        <span class="profile-row-label">Time Available</span>
+        <!-- get_time_available_display returns the human readable label -->
+        <!-- for example "10_to_20" becomes "10 to 20 minutes" -->
+        <span class="profile-row-value">
+          {{ profile.get_time_available_display|default:"—" }}
+        </span>
+      </div>
+
+      <div class="profile-row">
+        <span class="profile-row-label">Recent Cravings</span>
+        <!-- last_craving comes from the most recent log entry -->
+        <span class="profile-row-value">
+          {{ last_craving|default:"—" }}/10
+        </span>
+      </div>
+
+      <!-- Button to update their profile which will regenerate the plan -->
+      <a href="{% url 'profile' %}" class="btn-primary"
+         style="margin-top:16px; display:block;">
+        Update Profile
+      </a>
+
+      <!-- Small note reminding them the plan adapts automatically -->
+      <div style="background:#fffbeb; border-radius:10px; padding:12px;
+                  margin-top:14px; font-size:12px; color:#92400e;">
+        Your exercise plan automatically adapts based on your profile
+        and progress. Update your profile any time to get better
+        recommendations.
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
 {% endblock %}

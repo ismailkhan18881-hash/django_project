@@ -1,48 +1,196 @@
 {% extends "base.html" %}
-{% block title %}Log Progress{% endblock %}
+{% block title %}Log Progress – QuitCig{% endblock %}
 
 {% block content %}
-<div style="max-width: 800px; margin: 40px auto; padding: 24px; background: #fff; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.08);">
-  <h1>Log Progress</h1>
-  <p style="color: #555;">Track your daily smoking and craving level.</p>
 
+<!-- Page header -->
+<div class="page-header">
+  <h1>Log Your Progress</h1>
+  <p>Track how you are feeling today. Be honest with yourself — every step counts.</p>
+</div>
+
+
+<!-- ── TODAY'S ENTRY FORM ─────────────────────────────────────────
+     This form saves to the log_progress view in views.py.
+     When submitted it creates a new ProgressLog entry in the database.
+     The money_saved field is calculated automatically in the view
+     based on how many cigarettes they avoided compared to their baseline.
+──────────────────────────────────────────────────────────────────── -->
+<div class="card" style="margin-bottom:24px;">
+  <h3 style="font-size:16px; font-weight:700; margin-bottom:20px;">
+    Today's Entry
+  </h3>
+
+  <!-- The form posts back to the same URL which calls log_progress in views.py -->
   <form method="post">
     {% csrf_token %}
+    <!-- csrf_token is required on all POST forms for security -->
 
-    <div style="margin-bottom: 20px;">
-      <label><strong>Cigarettes smoked today</strong></label><br>
+    <!-- Cigarettes smoked today -->
+    <div class="form-group">
+      <label>Cigarettes smoked today</label>
+      <!-- form.cigarettes_smoked renders as a number input from forms.py -->
       {{ form.cigarettes_smoked }}
     </div>
 
-    <div style="margin-bottom: 20px;">
+    <!-- Craving level slider -->
+    <div class="form-group">
       <label>
-        <strong>Craving level:</strong>
-        <span id="cravingValue" style="font-weight: bold; margin-left: 8px;">{{ form.craving_level.value|default:"0" }}</span>/10
-      </label><br>
+        Craving level
+        <!-- This span shows the current slider value -->
+        <!-- It updates live using the JavaScript at the bottom of this file -->
+        <span id="cravingVal"
+              style="color:#6c3fc5; font-weight:700; margin-left:8px;">
+          {{ form.craving_level.value|default:"5" }}
+        </span>/10
+      </label>
+      <!-- form.craving_level renders as a range slider from forms.py -->
       {{ form.craving_level }}
-      <div style="font-size: 0.85em; color: #666;">0 = no craving, 10 = extreme craving</div>
+      <!-- Labels at each end of the slider -->
+      <div class="slider-row">
+        <span>0 – No craving</span>
+        <span>10 – Intense</span>
+      </div>
     </div>
 
-    <div style="margin-bottom: 20px;">
-      <label><strong>Notes</strong></label><br>
+    <!-- Optional notes field -->
+    <div class="form-group">
+      <label>Notes — How are you feeling?</label>
+      <!-- form.notes renders as a textarea from forms.py -->
       {{ form.notes }}
     </div>
 
-    <button type="submit" style="padding: 10px 18px; border: none; border-radius: 8px; background: #16a34a; color: white; font-weight: 600; cursor: pointer;">
-      Save
-    </button>
+    <!-- Small reminder text above the save button -->
+    <p style="font-size:12px; color:#6b7280; margin-bottom:14px;">
+      Being honest helps you understand your patterns and stay on track.
+    </p>
+
+    <!-- Save button submits the form -->
+    <button type="submit" class="btn-primary">Save Entry</button>
   </form>
 </div>
 
+
+<!-- ── RECENT ENTRIES ─────────────────────────────────────────────
+     Shows the last 10 log entries for this user.
+     recent_logs comes from the log_progress view in views.py.
+     Each entry shows the date, cigarettes, craving level, and notes.
+     The craving badge colour changes based on the craving level:
+     Green = Low (0 to 3), Amber = Moderate (4 to 6), Red = High (7 to 10)
+──────────────────────────────────────────────────────────────────── -->
+<div class="card">
+  <h3 style="font-size:16px; font-weight:700; margin-bottom:20px;">
+    Recent Entries
+  </h3>
+
+  {% if recent_logs %}
+    {% for log in recent_logs %}
+
+      <!-- Check craving level to decide which badge colour to show -->
+      {% if log.craving_level <= 3 %}
+        <!-- Low craving - green badge -->
+        <div class="entry-card">
+          <div class="entry-header">
+            <!-- Format the date nicely e.g. Thu 05 Feb 2026 -->
+            <div class="entry-date">{{ log.date|date:"D d M Y" }}</div>
+            <span class="craving-badge craving-low">Low</span>
+          </div>
+          <!-- Two stat boxes showing cigarettes and craving -->
+          <div class="entry-stats">
+            <div class="entry-stat">
+              <strong>{{ log.cigarettes_smoked }}</strong>
+              Cigarettes
+            </div>
+            <div class="entry-stat">
+              <strong>{{ log.craving_level }}/10</strong>
+              Craving
+            </div>
+          </div>
+          <!-- Only show notes section if the user actually wrote something -->
+          {% if log.notes %}
+            <div class="entry-note">"{{ log.notes }}"</div>
+          {% endif %}
+        </div>
+
+      {% elif log.craving_level <= 6 %}
+        <!-- Moderate craving - amber badge -->
+        <div class="entry-card">
+          <div class="entry-header">
+            <div class="entry-date">{{ log.date|date:"D d M Y" }}</div>
+            <span class="craving-badge craving-moderate">Moderate</span>
+          </div>
+          <div class="entry-stats">
+            <div class="entry-stat">
+              <strong>{{ log.cigarettes_smoked }}</strong>
+              Cigarettes
+            </div>
+            <div class="entry-stat">
+              <strong>{{ log.craving_level }}/10</strong>
+              Craving
+            </div>
+          </div>
+          {% if log.notes %}
+            <div class="entry-note">"{{ log.notes }}"</div>
+          {% endif %}
+        </div>
+
+      {% else %}
+        <!-- High craving - red badge -->
+        <div class="entry-card">
+          <div class="entry-header">
+            <div class="entry-date">{{ log.date|date:"D d M Y" }}</div>
+            <span class="craving-badge craving-high">High</span>
+          </div>
+          <div class="entry-stats">
+            <div class="entry-stat">
+              <strong>{{ log.cigarettes_smoked }}</strong>
+              Cigarettes
+            </div>
+            <div class="entry-stat">
+              <strong>{{ log.craving_level }}/10</strong>
+              Craving
+            </div>
+          </div>
+          {% if log.notes %}
+            <div class="entry-note">"{{ log.notes }}"</div>
+          {% endif %}
+        </div>
+
+      {% endif %}
+
+    {% endfor %}
+
+  {% else %}
+    <!-- Shown if the user has not logged anything yet -->
+    <p style="color:#6b7280; font-size:14px;">
+      No entries yet. Log your first entry above!
+    </p>
+  {% endif %}
+
+</div>
+
+
+<!-- ── SLIDER JAVASCRIPT ──────────────────────────────────────────
+     This small script makes the craving number update live
+     as the user moves the slider left and right.
+     Without this the number would stay at the default value.
+──────────────────────────────────────────────────────────────────── -->
 <script>
+  // Find the range input slider on the page
   const slider = document.querySelector('input[type="range"]');
-  const output = document.getElementById('cravingValue');
+
+  // Find the span that shows the current craving number
+  const output = document.getElementById('cravingVal');
 
   if (slider && output) {
+    // Set the initial value when the page loads
     output.innerText = slider.value;
-    slider.oninput = function () {
+
+    // Every time the slider moves update the number displayed
+    slider.oninput = function() {
       output.innerText = this.value;
     };
   }
 </script>
+
 {% endblock %}
