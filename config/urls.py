@@ -1,23 +1,24 @@
 # config/urls.py
 # This is the main URL configuration file for the whole project.
 # Django reads this first when any request comes in.
-# It connects the admin panel, the login and logout pages,
-# and all the core app URLs together in one place.
+# I added a redirect at the root URL so visiting the homepage
+# sends the user to the dashboard instead of showing a 404 error.
 
 from django.contrib import admin
 from django.urls import path, include
-from django.contrib.auth import views as auth_views
+from django.views.generic import RedirectView
 
 urlpatterns = [
-    # The Django admin panel at /admin/
-    # This lets me manage users, profiles, logs and badges
-    path("admin/", admin.site.urls),
+    # The root URL redirects to dashboard
+    # without this visiting the homepage shows a Not Found error
+    path('', RedirectView.as_view(url='/dashboard/'), name='home'),
 
-    # Django's built in authentication URLs
-    # This gives us /accounts/login/ and /accounts/logout/ for free
-    path("accounts/", include("django.contrib.auth.urls")),
+    # The Django admin panel at /admin/
+    path('admin/', admin.site.urls),
+
+    # Django's built in login and logout URLs
+    path('accounts/', include('django.contrib.auth.urls')),
 
     # All the core app URLs from core/urls.py
-    # The empty string means they start at the root of the site
-    path("", include("core.urls")),
+    path('', include('core.urls')),
 ]
