@@ -23,6 +23,11 @@ DEBUG = False
 # the star means any domain is allowed which is needed for Railway
 ALLOWED_HOSTS = ['*']
 
+# CSRF_TRUSTED_ORIGINS tells Django which domains are allowed to submit forms
+# without this Railway blocks all form submissions with a 403 Forbidden error
+# I had to add this after deploying because login was not working on the live site
+CSRF_TRUSTED_ORIGINS = ['https://djangoproject-production-045b.up.railway.app']
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -102,7 +107,6 @@ STATICFILES_DIRS = [
 ]
 
 # CompressedStaticFilesStorage makes WhiteNoise compress CSS for faster loading
-# I changed from CompressedManifestStaticFilesStorage which was causing issues
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # This tells WhiteNoise to also look in STATICFILES_DIRS
