@@ -12,6 +12,7 @@ from .views import (
     plan_view,
     dashboard_view,
     questionnaire_view,
+    register_view,
 )
 
 urlpatterns = [
@@ -30,4 +31,7 @@ urlpatterns = [
     # The 15 question onboarding questionnaire
     # New users are redirected here before they can see the dashboard
     path("questionnaire/", questionnaire_view, name="questionnaire"),
+
+    # The registration page for new users to create an account
+    path("register/", register_view, name="register"),
 ]

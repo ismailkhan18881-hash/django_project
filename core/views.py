@@ -10,7 +10,10 @@ from datetime import date, timedelta
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 from .forms import ProfileForm, ProgressLogForm, QuestionnaireForm
 from .utils import generate_exercise_plan, calculate_score
@@ -281,6 +284,56 @@ def get_dashboard_stats(user):
 
 
 # ─────────────────────────────────────────────
+# VIEW: register_view
+# Handles new user registration.
+# Uses Django's built in UserCreationForm which enforces:
+# - password must be at least 8 characters
+# - password cannot be too common
+# - password cannot be entirely numeric
+# - both passwords must match
+# If the email already exists it prompts them to log in instead.
+# ─────────────────────────────────────────────
+
+def register_view(request):
+
+    # If they are already logged in send them straight to the dashboard
+    if request.user.is_authenticated:
+        return redirect("dashboard")
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+
+        # Check if the email already exists before doing anything else
+        email = request.POST.get("email", "").strip()
+        if email and User.objects.filter(email=email).exists():
+            messages.error(
+                request,
+                "An account with this email already exists. Please log in instead."
+            )
+            return render(request, "registration/register.html", {"form": form})
+
+        if form.is_valid():
+            user = form.save(commit=False)
+            # Save the email they entered into the user account
+            user.email = email
+            user.save()
+            # Log them in straight away so they go directly to the questionnaire
+            login(request, user)
+            messages.success(request, "Account created! Please complete your profile to get started.")
+            return redirect("questionnaire")
+        else:
+            # Loop through all form errors and show them as messages
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, error)
+
+    else:
+        form = UserCreationForm()
+
+    return render(request, "registration/register.html", {"form": form})
+
+
+# ─────────────────────────────────────────────
 # VIEW: questionnaire_view
 # This is the first page new users see.
 # It shows the 15 question form and saves the answers to the profile.
@@ -393,8 +446,8 @@ def dashboard_view(request):
     reminder_level = get_reminder_level(last_log)
 
     # Calculate money stats for the motivation section
-    daily_cost    = (profile.cigarettes_per_day or 0) * 0.50  # assume 50p per cigarette
-    yearly_saving = round(daily_cost * 365, 2)                 # project over a full year
+    daily_cost    = (profile.cigarettes_per_day or 0) * 0.50
+    yearly_saving = round(daily_cost * 365, 2)
 
     # Bundle everything into a context dictionary and send it to the template
     context = {
@@ -407,7 +460,7 @@ def dashboard_view(request):
         "daily_cost":       daily_cost,
         "yearly_saving":    yearly_saving,
         "trend":            trend,
-        **stats,   # unpack all the stats from get_dashboard_stats
+        **stats,
     }
 
     return render(request, "dashboard.html", context)
@@ -417,29 +470,23 @@ def dashboard_view(request):
 # VIEW: profile_view
 # Lets users update their profile details
 # after they have completed the questionnaire.
-# If they have not done the questionnaire yet
-# they get redirected there first.
 # ─────────────────────────────────────────────
 
 @login_required
 def profile_view(request):
 
-    # Get or create the profile for this user
     profile, created = Profile.objects.get_or_create(user=request.user)
 
-    # If they have not done the questionnaire send them there first
     if not profile.questionnaire_done:
         return redirect("questionnaire")
 
     if request.method == "POST":
-        # The user submitted the update form so try to save it
         form = ProfileForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
             messages.success(request, "Profile updated successfully!")
             return redirect("dashboard")
     else:
-        # Just visiting the page so show the form with their current values
         form = ProfileForm(instance=profile)
 
     return render(request, "profile.html", {"form": form})
@@ -449,34 +496,28 @@ def profile_view(request):
 # VIEW: log_progress
 # The daily logging page where users record
 # how many cigarettes they smoked and their craving level.
-# Also shows their last 10 entries in the recent entries section.
 # ─────────────────────────────────────────────
 
 @login_required
 def log_progress(request):
 
     if request.method == "POST":
-        # The user submitted the log form so try to save it
         form = ProgressLogForm(request.POST)
         if form.is_valid():
-            log      = form.save(commit=False)   # save without committing yet
-            log.user = request.user              # attach the log to this user
+            log      = form.save(commit=False)
+            log.user = request.user
 
-            # Calculate how much money they saved today
-            # Each cigarette avoided is worth approximately 50 pence
             profile  = Profile.objects.filter(user=request.user).first()
             baseline = profile.cigarettes_per_day if profile and profile.cigarettes_per_day else 20
             avoided  = max(0, baseline - int(log.cigarettes_smoked))
             log.money_saved = round(avoided * 0.50, 2)
 
-            log.save()   # now save to the database
+            log.save()
             messages.success(request, "Progress logged! Keep it up!")
             return redirect("dashboard")
     else:
-        # Just visiting the page so show the empty form
         form = ProgressLogForm()
 
-    # Get the last 10 log entries to show in the recent entries section
     recent_logs = ProgressLog.objects.filter(
         user=request.user
     ).order_by("-date", "-id")[:10]
@@ -490,23 +531,16 @@ def log_progress(request):
 # ─────────────────────────────────────────────
 # VIEW: plan_view
 # The exercise plan page.
-# Uses the scoring algorithm from utils.py to generate
-# a personalised list of exercises for the user.
-# Also shows the score, tier, and trend so the user
-# can see how the algorithm made its decision.
 # ─────────────────────────────────────────────
 
 @login_required
 def plan_view(request):
 
-    # Get or create the profile for this user
     profile, created = Profile.objects.get_or_create(user=request.user)
 
-    # If they have not done the questionnaire send them there first
     if not profile.questionnaire_done:
         return redirect("questionnaire")
 
-    # If the profile is missing key data show a prompt to complete it
     if profile.cigarettes_per_day is None:
         return render(request, "plan.html", {
             "exercises":    [],
@@ -517,24 +551,19 @@ def plan_view(request):
             "trend":        None,
         })
 
-    # Get the most recent log entry to use in the plan calculation
     last_log = ProgressLog.objects.filter(
         user=request.user
     ).order_by("-date", "-id").first()
 
-    # Get all logs ordered by date for the trend detection
     all_logs = ProgressLog.objects.filter(
         user=request.user
     ).order_by("date")
 
-    # Use the most recent log values if available otherwise fall back to profile defaults
     cigs    = last_log.cigarettes_smoked if last_log else profile.cigarettes_per_day
     craving = last_log.craving_level     if last_log else 0
 
-    # Run the scoring algorithm to get the score and trend
     score, trend = calculate_score(profile, all_logs)
 
-    # Work out which tier label to show based on the score
     if score >= 70:
         tier = "Active"
     elif score >= 40:
@@ -542,10 +571,8 @@ def plan_view(request):
     else:
         tier = "Gentle"
 
-    # Generate the personalised exercise list
     exercises = generate_exercise_plan(int(cigs), int(craving), profile, score)
 
-    # Pass everything to the template including score tier and trend
     return render(request, "plan.html", {
         "exercises":    exercises,
         "profile":      profile,
