@@ -13,7 +13,6 @@
 ──────────────────────────────────────────────────────────────────── -->
 
 {% if reminder_level == 1 %}
-  <!-- Level 1 reminder - gentle nudge after 7 days -->
   <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:12px;
               padding:18px 24px; margin-bottom:24px;">
     <h3 style="color:#1d4ed8; font-size:16px; margin-bottom:6px;">
@@ -23,7 +22,6 @@
       You have not logged in 7 days. That is okay — life gets busy.
       Your journey is still here waiting for you.
     </p>
-    <!-- Show their personal quit reason from question 12 as a reminder -->
     {% if profile.quit_reason %}
       <p style="color:#1e40af; font-size:13px; margin-bottom:10px;">
         You said you wanted to quit because:
@@ -37,7 +35,6 @@
   </div>
 
 {% elif reminder_level == 2 %}
-  <!-- Level 2 reminder - more emotional appeal after 14 days -->
   <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:12px;
               padding:18px 24px; margin-bottom:24px;">
     <h3 style="color:#92400e; font-size:16px; margin-bottom:6px;">
@@ -46,12 +43,10 @@
     <p style="color:#78350f; font-size:14px; margin-bottom:8px;">
       It has been 2 weeks since your last check in.
     </p>
-    <!-- Use a real statistic to motivate them to come back -->
     <p style="color:#78350f; font-size:13px; margin-bottom:8px;">
       Did you know — people who track their progress are
       <strong>3 times more likely</strong> to successfully quit smoking.
     </p>
-    <!-- Show what they had achieved before they went quiet -->
     <p style="color:#78350f; font-size:13px; margin-bottom:8px;">
       What you had achieved before:
       Health Score <strong>{{ health_score|default:"—" }}</strong> and
@@ -72,8 +67,6 @@
   </div>
 
 {% elif reminder_level == 3 %}
-  <!-- Level 3 reminder - strongest message after 30 days -->
-  <!-- Uses their personal quit reason for maximum emotional impact -->
   <div style="background:#fff1f2; border:1px solid #fecdd3; border-radius:12px;
               padding:18px 24px; margin-bottom:24px;">
     <h3 style="color:#be123c; font-size:16px; margin-bottom:6px;">
@@ -84,7 +77,6 @@
       We know quitting is one of the hardest things a person can do.
       Setbacks are part of the journey — not the end of it.
     </p>
-    <!-- Real NHS statistic about quit attempts to reduce shame -->
     <p style="color:#9f1239; font-size:13px; margin-bottom:8px;">
       Did you know?
       <strong>"Most successful quitters tried 8 to 10 times before it worked.
@@ -99,7 +91,6 @@
     <p style="color:#9f1239; font-size:13px; margin-bottom:10px;">
       Start again today — we are here.
     </p>
-    <!-- Two buttons - one to log today and one to update their plan -->
     <div style="display:flex; gap:10px; flex-wrap:wrap;">
       <a href="{% url 'progress' %}" class="btn-primary"
          style="width:auto; display:inline-block; padding:8px 20px;">
@@ -115,10 +106,7 @@
 {% endif %}
 
 
-<!-- ── WELCOME HEADER ─────────────────────────────────────────────
-     Shows the user's first name from their Django account.
-     If no first name is set it falls back to "there".
-──────────────────────────────────────────────────────────────────── -->
+<!-- ── WELCOME HEADER ─────────────────────────────────────────────────── -->
 <div class="welcome-card">
   <h1>Welcome back,
     <span>{{ request.user.first_name|default:"there" }}</span>
@@ -127,50 +115,37 @@
 </div>
 
 
-<!-- ── STAT CARDS ─────────────────────────────────────────────────
-     These four cards show the user's key stats at a glance.
-     All values come from get_dashboard_stats() in views.py.
-     The default filter shows a dash if the value is not available yet.
-──────────────────────────────────────────────────────────────────── -->
+<!-- ── STAT CARDS ─────────────────────────────────────────────────────── -->
 <div class="stat-grid">
 
   <div class="stat-card">
     <div class="stat-icon">🔥</div>
     <div class="stat-label">Days Smoke-Free</div>
-    <!-- days_smoke_free is the consecutive streak count from views.py -->
     <div class="stat-value">{{ days_smoke_free|default:"—" }}</div>
   </div>
 
   <div class="stat-card">
     <div class="stat-icon">🚬</div>
     <div class="stat-label">Cigarettes Avoided</div>
-    <!-- cigarettes_avoided compares actual vs baseline from profile -->
     <div class="stat-value">{{ cigarettes_avoided|default:"—" }}</div>
   </div>
 
   <div class="stat-card">
     <div class="stat-icon">❤️</div>
     <div class="stat-label">Health Score</div>
-    <!-- health_score is calculated from the last 7 log entries -->
     <div class="stat-value">{{ health_score|default:"—" }}</div>
   </div>
 
   <div class="stat-card">
     <div class="stat-icon">💰</div>
     <div class="stat-label">Money Saved</div>
-    <!-- total_money_saved adds up all money_saved fields from logs -->
     <div class="stat-value">£{{ total_money_saved|default:"0" }}</div>
   </div>
 
 </div>
 
 
-<!-- ── MOTIVATIONAL MESSAGE ───────────────────────────────────────
-     This section shows a personalised message, health statistic,
-     the user's quit reason, and their money saved projection.
-     All content comes from get_motivational_content() in views.py.
-     The tone of the message depends on question 15 of the questionnaire.
-──────────────────────────────────────────────────────────────────── -->
+<!-- ── MOTIVATIONAL MESSAGE ───────────────────────────────────────────── -->
 {% if motivation %}
 <div style="background:linear-gradient(135deg, #f0f4ff, #faf0ff);
             border:1px solid #e0e7ff; border-radius:16px;
@@ -178,9 +153,7 @@
 
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
 
-    <!-- Left side - motivational tone and health statistic -->
     <div>
-      <!-- The opener changes based on their emotional state from Q15 -->
       <p style="font-size:15px; font-weight:700; color:#4f46e5; margin-bottom:4px;">
         {{ motivation.tone_opener }}
       </p>
@@ -188,7 +161,6 @@
         {{ motivation.tone_sub }}
       </p>
 
-      <!-- Health statistic based on how many days smoke free they are -->
       <div style="background:white; border-radius:10px; padding:12px;
                   border:1px solid #e0e7ff;">
         <p style="font-size:12px; font-weight:600; color:#6c3fc5; margin-bottom:4px;">
@@ -199,7 +171,6 @@
         </p>
       </div>
 
-      <!-- Only shown if their current craving level is 7 or above -->
       {% if motivation.craving_tip %}
         <div style="background:#fef9c3; border-radius:10px; padding:10px;
                     margin-top:10px; border:1px solid #fde68a;">
@@ -210,9 +181,7 @@
       {% endif %}
     </div>
 
-    <!-- Right side - personal quit reason and money stats -->
     <div>
-      <!-- Show their answer to question 12 back to them as motivation -->
       {% if profile.quit_reason %}
         <div style="background:white; border-radius:10px; padding:12px;
                     border:1px solid #e0e7ff; margin-bottom:10px;">
@@ -228,7 +197,6 @@
         </div>
       {% endif %}
 
-      <!-- Money saved stats with a yearly projection -->
       <div style="background:white; border-radius:10px; padding:12px;
                   border:1px solid #e0e7ff;">
         <p style="font-size:12px; font-weight:600; color:#6c3fc5; margin-bottom:8px;">
@@ -237,15 +205,12 @@
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
           <div style="font-size:12px; color:#6b7280;">
             Total saved
-            <!-- total_money_saved comes from adding up all log entries -->
             <strong style="display:block; font-size:16px; color:#16a34a;">
               £{{ total_money_saved }}
             </strong>
           </div>
           <div style="font-size:12px; color:#6b7280;">
             Yearly projection
-            <!-- yearly_saving is calculated in the dashboard view -->
-            <!-- it multiplies daily cigarette cost by 365 -->
             <strong style="display:block; font-size:16px; color:#16a34a;">
               £{{ yearly_saving }}
             </strong>
@@ -259,22 +224,14 @@
 {% endif %}
 
 
-<!-- ── PROGRESS CHART AND MILESTONE CARD ─────────────────────────
-     Two columns side by side.
-     Left: Chart.js line graph of the last 14 log entries.
-     Right: Purple milestone card showing progress towards next goal.
-──────────────────────────────────────────────────────────────────── -->
+<!-- ── PROGRESS CHART AND MILESTONE CARD ─────────────────────────────── -->
 <div class="dashboard-grid" style="margin-bottom:20px;">
 
-  <!-- Progress chart card -->
   <div class="card">
     <h3 style="font-size:16px; font-weight:700; margin-bottom:16px;">
       Progress Overview
     </h3>
-    <!-- Only show the chart if there is data to display -->
-    <!-- chart_labels is a JSON list of date strings from views.py -->
     {% if chart_labels %}
-      <!-- The canvas element is where Chart.js draws the graph -->
       <canvas id="progressChart" height="160"></canvas>
     {% else %}
       <p style="color:#6b7280; font-size:14px;">
@@ -283,28 +240,23 @@
     {% endif %}
   </div>
 
-  <!-- Milestone card with purple gradient background -->
   <div class="milestone-card">
     <h3>Amazing Progress!</h3>
     <p>You are on an incredible journey</p>
 
-    <!-- Shows current days vs next milestone target -->
     <div class="milestone-bar-label">
       <span>Next Milestone</span>
       <span>{{ days_smoke_free|default:0 }} / {{ next_milestone }} days</span>
     </div>
 
-    <!-- Progress bar that fills based on milestone_pct from views.py -->
     <div class="milestone-bar-bg">
       <div class="milestone-bar-fill" style="width:{{ milestone_pct }}%;"></div>
     </div>
 
-    <!-- Motivational message about the milestone -->
     <p style="font-size:13px; opacity:0.9; margin-bottom:0;">
       {{ milestone_message }}
     </p>
 
-    <!-- Two info boxes showing upcoming milestone and days until it -->
     <div class="milestone-info-grid">
       <div class="milestone-info-box">
         <span>Upcoming Milestone</span>
@@ -320,87 +272,66 @@
 </div>
 
 
-<!-- ── TODAY'S EXERCISES AND QUICK LOG ───────────────────────────
-     Two columns side by side.
-     Left: Preview of today's exercise plan.
-     Right: Quick log form so users can log without leaving the dashboard.
-──────────────────────────────────────────────────────────────────── -->
+<!-- ── TODAY'S EXERCISES AND QUICK LOG ───────────────────────────────── -->
 <div class="dashboard-grid-3" style="margin-bottom:20px;">
 
-  <!-- Today's exercises preview -->
   <div class="card">
     <h3 style="font-size:16px; font-weight:700; margin-bottom:16px;">
       Today's Exercises
     </h3>
 
-    <!-- todays_exercises comes from generate_exercise_plan() in views.py -->
     {% if todays_exercises %}
       {% for ex in todays_exercises %}
         <div class="exercise-item">
-          <!-- Circle that can be ticked - done is False by default -->
           <div class="exercise-check {% if ex.done %}done{% endif %}">
             {% if ex.done %}✓{% endif %}
           </div>
           <div>
-            <!-- Exercise name with intensity badge next to it -->
             <div class="exercise-name">
               {{ ex.name }}
-              <!-- intensity_class controls the badge colour from CSS -->
               <span class="intensity-badge badge-{{ ex.intensity_class }}">
                 {{ ex.intensity }}
               </span>
             </div>
-            <!-- Duration shown below the exercise name -->
             <div class="exercise-meta">{{ ex.duration }}</div>
           </div>
         </div>
       {% endfor %}
     {% else %}
-      <!-- Shown if no exercises were generated yet -->
       <p style="color:#6b7280; font-size:14px;">
         Complete your profile to get your exercise plan.
       </p>
     {% endif %}
 
-    <!-- Link to the full exercise plan page -->
     <a href="{% url 'plan' %}" class="btn-primary"
        style="margin-top:14px; display:block;">
       View Full Plan
     </a>
   </div>
 
-  <!-- Quick log form -->
   <div class="quick-log-card">
     <h3>
       Quick Log
-      <!-- Link to the full log progress page -->
       <a href="{% url 'progress' %}" class="view-all-link">View All</a>
     </h3>
 
-    <!-- This form posts to the log_progress view in views.py -->
-    <!-- action points to the progress URL so it saves correctly -->
     <form method="post" action="{% url 'progress' %}">
       {% csrf_token %}
 
-      <!-- Cigarettes smoked today -->
       <div class="form-group">
         <label>Cigarettes smoked today</label>
-        <!-- Pre-fill with last log value if available -->
         <input type="number" name="cigarettes_smoked" min="0"
                value="{{ last_log.cigarettes_smoked|default:0 }}">
       </div>
 
-      <!-- Craving level slider -->
       <div class="form-group">
         <label>
           Craving level
-          <!-- This span updates live as the slider moves using JavaScript below -->
           <span id="dashCravingVal"
                 style="color:#6c3fc5; font-weight:700;">
             {{ last_log.craving_level|default:5 }}
           </span>/10
         </label>
-        <!-- Range input renders as a slider in the browser -->
         <input type="range" name="craving_level" min="0" max="10" step="1"
                value="{{ last_log.craving_level|default:5 }}"
                oninput="document.getElementById('dashCravingVal').innerText = this.value">
@@ -410,7 +341,6 @@
         </div>
       </div>
 
-      <!-- Optional notes textarea -->
       <div class="form-group">
         <label>Notes (optional)</label>
         <textarea name="notes" rows="3"
@@ -424,12 +354,9 @@
 </div>
 
 
-<!-- ── ACHIEVEMENT BADGES ─────────────────────────────────────────
-     Shows all 8 badges in a 4 column grid.
-     Earned badges are green, locked badges are grey.
-     all_badges comes from the dashboard view in views.py.
-     check_and_award_badges() runs every time the dashboard loads
-     and automatically awards any new badges the user has earned.
+<!-- ── ACHIEVEMENT BADGES ─────────────────────────────────────────────
+     Each badge key gets its own emoji.
+     Easier badges get simpler emojis, harder badges get awards.
 ──────────────────────────────────────────────────────────────────── -->
 <div class="card" style="margin-bottom:20px;">
   <h3 style="font-size:16px; font-weight:700; margin-bottom:16px;">
@@ -438,29 +365,36 @@
 
   <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px;">
     {% for badge in all_badges %}
-      <!-- Green background if earned, grey if locked -->
       <div style="background:{% if badge.earned %}#f0fdf4{% else %}#f9fafb{% endif %};
                   border:1px solid {% if badge.earned %}#bbf7d0{% else %}#e5e7eb{% endif %};
                   border-radius:12px; padding:14px; text-align:center;">
 
-        <!-- Badge label - first 2 characters are the emoji -->
+        <!-- Emoji assigned per badge key -->
         <div style="font-size:28px; margin-bottom:6px;
                     opacity:{% if badge.earned %}1{% else %}0.3{% endif %};">
-          {{ badge.label|slice:":2" }}
+          {% if badge.key == 'first_step' %}📝
+          {% elif badge.key == 'logger' %}📅
+          {% elif badge.key == 'on_fire' %}🔥
+          {% elif badge.key == 'two_weeks' %}⚡
+          {% elif badge.key == 'one_month' %}🏅
+          {% elif badge.key == 'money_saver' %}💰
+          {% elif badge.key == 'calm_mind' %}🧘
+          {% elif badge.key == 'dedicated' %}🏆
+          {% endif %}
         </div>
 
-        <!-- Badge name - everything after the emoji -->
+        <!-- Full badge name -->
         <div style="font-size:13px; font-weight:600;
                     color:{% if badge.earned %}#15803d{% else %}#9ca3af{% endif %};">
-          {{ badge.label|slice:"2:" }}
+          {{ badge.label }}
         </div>
 
-        <!-- Short description of how to earn the badge -->
+        <!-- Description of how to earn it -->
         <div style="font-size:11px; color:#6b7280; margin-top:4px;">
           {{ badge.desc }}
         </div>
 
-        <!-- Show earned or locked status -->
+        <!-- Earned or locked -->
         {% if badge.earned %}
           <div style="font-size:11px; color:#16a34a; font-weight:600; margin-top:6px;">
             Earned!
@@ -477,40 +411,30 @@
 </div>
 
 
-<!-- ── CHART.JS SCRIPT ────────────────────────────────────────────
-     This JavaScript runs after the page loads and draws the chart.
-     chart_labels, chart_cigarettes, and chart_cravings are JSON strings
-     passed from views.py. The safe filter tells Django not to escape them
-     so JavaScript can read them as proper arrays.
-──────────────────────────────────────────────────────────────────── -->
+<!-- ── CHART.JS SCRIPT ────────────────────────────────────────────────── -->
 {% if chart_labels %}
 <script>
-  // Get the canvas element where the chart will be drawn
   const ctx = document.getElementById('progressChart').getContext('2d');
 
-  // These variables come from Django views.py as JSON arrays
-  const labels      = {{ chart_labels|safe }};      // date labels like "05 Feb"
-  const cigData     = {{ chart_cigarettes|safe }};   // cigarettes smoked per day
-  const cravingData = {{ chart_cravings|safe }};     // craving level per day
+  const labels      = {{ chart_labels|safe }};
+  const cigData     = {{ chart_cigarettes|safe }};
+  const cravingData = {{ chart_cravings|safe }};
 
-  // Create a new Chart.js line chart with two datasets
   new Chart(ctx, {
     type: 'line',
     data: {
       labels: labels,
       datasets: [
         {
-          // Red line for cigarettes smoked
           label:           'Cigarettes Smoked',
           data:            cigData,
           borderColor:     '#ef4444',
           backgroundColor: 'rgba(239,68,68,0.1)',
-          tension:         0.4,   // makes the line curved rather than jagged
-          pointRadius:     4,     // size of the dots on the line
-          fill:            true,  // fills the area under the line
+          tension:         0.4,
+          pointRadius:     4,
+          fill:            true,
         },
         {
-          // Purple line for craving level
           label:           'Craving Level',
           data:            cravingData,
           borderColor:     '#6c3fc5',
@@ -525,17 +449,17 @@
       responsive: true,
       plugins: {
         legend: {
-          position: 'bottom',             // legend shown below the chart
+          position: 'bottom',
           labels: { font: { size: 12 } }
         }
       },
       scales: {
         y: {
-          beginAtZero: true,              // y axis starts at 0
-          grid: { color: '#f3f4f6' }     // light grey grid lines
+          beginAtZero: true,
+          grid: { color: '#f3f4f6' }
         },
         x: {
-          grid: { display: false }        // no vertical grid lines
+          grid: { display: false }
         }
       }
     }
