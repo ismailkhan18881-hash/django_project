@@ -11,13 +11,11 @@ from django.db import models
 from django.utils import timezone
 
 
-# ─────────────────────────────────────────────
 # MODEL: Profile
 # This stores all the personal information about a user.
 # It has a one-to-one relationship with Django's built in User model
 # meaning every user account gets exactly one profile.
 # The questionnaire answers are all stored here as individual fields.
-# ─────────────────────────────────────────────
 
 class Profile(models.Model):
 
@@ -25,7 +23,7 @@ class Profile(models.Model):
     # If the user account is deleted the profile gets deleted too
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    # ── Section 1: Smoking Behaviour ──────────────────────────────
+    # Section 1: Smoking Behaviour 
     # These fields store the answers from the first four questions
     # of the questionnaire about their smoking habits
 
@@ -75,7 +73,7 @@ class Profile(models.Model):
         null=True, blank=True
     )
 
-    # ── Section 2: Medical and Health ─────────────────────────────
+    # Section 2: Medical and Health 
     # These fields are the safety constraints in the algorithm
     # Each one is a separate boolean so I can check them individually
     # They reduce the algorithm score to keep unsafe exercises out of the plan
@@ -116,7 +114,7 @@ class Profile(models.Model):
         null=True, blank=True
     )
 
-    # ── Section 3: Physical Ability ───────────────────────────────
+    # Section 3: Physical Ability 
     # These fields boost the algorithm score and filter which exercises appear
     # I store each activity as a separate boolean so I can check them independently
 
@@ -153,7 +151,7 @@ class Profile(models.Model):
         null=True, blank=True
     )
 
-    # ── Section 4: Motivation and Lifestyle ───────────────────────
+    # Section 4: Motivation and Lifestyle 
     # These fields affect the score and the tone of messages shown to the user
 
     # Q12 - open text field asking why they want to quit
@@ -214,12 +212,10 @@ class Profile(models.Model):
         return f"{self.user.username} profile"
 
 
-# ─────────────────────────────────────────────
 # MODEL: ProgressLog
 # Stores each daily entry the user makes.
 # One entry per day although technically multiple are allowed.
 # I always use the most recent one for calculations.
-# ─────────────────────────────────────────────
 
 class ProgressLog(models.Model):
 
@@ -251,15 +247,12 @@ class ProgressLog(models.Model):
         # Shows username and date in the Django admin panel
         return f"{self.user.username} - {self.date}"
 
-
-# ─────────────────────────────────────────────
 # MODEL: Achievement
 # Stores which badges the user has earned.
 # Badges are checked and awarded automatically
 # every time the dashboard loads in views.py.
 # The unique_together constraint makes sure
 # a user can only earn each badge once.
-# ─────────────────────────────────────────────
 
 class Achievement(models.Model):
 

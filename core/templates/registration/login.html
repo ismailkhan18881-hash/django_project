@@ -5,8 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login – QuitCig</title>
-  <!-- Load the stylesheet - login page does not extend base.html
-       because it has its own full page centered layout -->
+ <!-- login page has its own layout does not use base.html --> 
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
@@ -21,7 +20,7 @@
     <p>Your journey to a smoke free life starts here.</p>
 
     <!-- The login form posts to Django's built in authentication view -->
-    <!-- Django handles checking the username and password for us -->
+    <!-- Django handles checking the username and password -->
     <form method="post" style="text-align:left;">
       {% csrf_token %}
       <!-- csrf_token is a security token Django requires on all POST forms -->

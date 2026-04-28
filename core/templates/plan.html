@@ -10,13 +10,13 @@
 </div>
 
 
-<!-- ── SCORE, TIER AND TREND CARDS ───────────────────────────────
+<!-- SCORE, TIER AND TREND CARDS 
      These three cards show the user how the algorithm made its decision.
      score comes from calculate_score() in utils.py.
      tier is worked out in plan_view() in views.py based on the score.
      trend shows whether cravings are getting better or worse over time.
      Showing these values makes the system transparent to the user.
-──────────────────────────────────────────────────────────────────── -->
+ -->
 {% if score is not None %}
 <div style="display:grid; grid-template-columns:1fr 1fr 1fr;
             gap:16px; margin-bottom:24px;">
@@ -118,14 +118,14 @@
 {% endif %}
 
 
-<!-- ── MAIN LAYOUT: EXERCISES LEFT, PROFILE SIDEBAR RIGHT ────────
+<!-- MAIN LAYOUT: EXERCISES LEFT, PROFILE SIDEBAR RIGHT 
      Two column layout using the plan-layout CSS class.
      Left column is wider and shows the exercises.
      Right column is narrower and shows their profile summary.
-──────────────────────────────────────────────────────────────────── -->
+ -->
 <div class="plan-layout">
 
-  <!-- ── LEFT COLUMN: Exercise list ─────────────────────────── -->
+  <!--  LEFT COLUMN: Exercise list  -->
   <div>
     <div class="card" style="margin-bottom:20px;">
 
@@ -190,11 +190,11 @@
       {% endif %}
     </div>
 
-    <!-- ── SAFETY SECTION ─────────────────────────────────────
+    <!-- SAFETY SECTION 
          Only shown if exercises were generated successfully.
          Explains the four factors used to personalise the plan.
          This reassures users that the system considered their safety.
-    ────────────────────────────────────────────────────────── -->
+     -->
     {% if exercises %}
     <div class="safety-card">
       <h3>Your Safety Comes First</h3>
@@ -235,7 +235,7 @@
   </div>
 
 
-  <!-- ── RIGHT COLUMN: Profile sidebar ──────────────────────── -->
+  <!-- RIGHT COLUMN: Profile sidebar  -->
   <!-- Shows the key profile values that were used to calculate the plan -->
   <!-- This makes it clear to the user exactly what data drove the result -->
   <div>

@@ -1,4 +1,4 @@
-/* =============================================
+/* 
    QuitCig - Main Stylesheet
    Colour palette:
      Primary purple: #6c3fc5
@@ -8,9 +8,9 @@
      White:          #ffffff
      Text dark:      #1e1b4b
      Text grey:      #6b7280
-   ============================================= */
+   */
 
-/* ---------- Reset & Base ---------- */
+/* Reset & Base */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -24,7 +24,7 @@ body {
   min-height: 100vh;
 }
 
-/* ---------- Navbar ---------- */
+/* Navbar*/
 .navbar {
   background: #ffffff;
   padding: 0 32px;
@@ -99,14 +99,14 @@ body {
   color: #dc2626;
 }
 
-/* ---------- Page wrapper ---------- */
+/*Page wrapper*/
 .page-wrapper {
   max-width: 1300px;
   margin: 0 auto;
   padding: 32px 40px;
 }
 
-/* ---------- Alert messages ---------- */
+/*Alert messages*/
 .alert {
   padding: 12px 18px;
   border-radius: 10px;
@@ -117,7 +117,7 @@ body {
 .alert-error   { background: #fee2e2; color: #991b1b; }
 .alert-warning { background: #fef9c3; color: #854d0e; }
 
-/* ---------- Cards ---------- */
+/*Cards*/
 .card {
   background: #ffffff;
   border-radius: 16px;
@@ -125,7 +125,7 @@ body {
   box-shadow: 0 4px 16px rgba(0,0,0,0.06);
 }
 
-/* ---------- Stat cards (top row on dashboard) ---------- */
+/*Stat cards (top row on dashboard)*/
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -157,7 +157,7 @@ body {
   color: #1e1b4b;
 }
 
-/* ---------- Dashboard grid ---------- */
+/*Dashboard grid */
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -171,7 +171,7 @@ body {
   gap: 20px;
 }
 
-/* ---------- Welcome header ---------- */
+/*Welcome header*/
 .welcome-card {
   background: #ffffff;
   border-radius: 16px;
@@ -195,7 +195,7 @@ body {
   font-size: 14px;
 }
 
-/* ---------- Milestone card (purple gradient) ---------- */
+/*Milestone card (purple gradient)*/
 .milestone-card {
   background: linear-gradient(135deg, #6c3fc5, #4f46e5);
   border-radius: 16px;
@@ -256,7 +256,7 @@ body {
   font-weight: 700;
 }
 
-/* ---------- Exercise checklist ---------- */
+/*Exercise checklist*/
 .exercise-item {
   display: flex;
   align-items: flex-start;
@@ -320,7 +320,7 @@ body {
 .badge-high     { background: #fee2e2; color: #dc2626; }
 .badge-verylow  { background: #e0f2fe; color: #0369a1; }
 
-/* ---------- Quick log (inline on dashboard) ---------- */
+/*Quick log (inline on dashboard)*/
 .quick-log-card {
   background: #ffffff;
   border-radius: 16px;
@@ -344,7 +344,7 @@ body {
   font-weight: 500;
 }
 
-/* ---------- Forms ---------- */
+/*Forms*/
 .form-group {
   margin-bottom: 18px;
 }
@@ -402,7 +402,7 @@ input[type="range"] {
   cursor: pointer;
 }
 
-/* ---------- Buttons ---------- */
+/*Buttons*/
 .btn-primary {
   display: inline-block;
   padding: 12px 24px;
@@ -440,7 +440,7 @@ input[type="range"] {
 
 .btn-green:hover { background: #15803d; }
 
-/* ---------- Page headers ---------- */
+/*Page headers*/
 .page-header {
   margin-bottom: 28px;
 }
@@ -456,7 +456,7 @@ input[type="range"] {
   font-size: 14px;
 }
 
-/* ---------- Log Progress - Recent entries ---------- */
+/*Log Progress - Recent entries*/
 .entry-card {
   background: #f9f9ff;
   border: 1px solid #ede9fe;
@@ -521,7 +521,7 @@ input[type="range"] {
   padding: 8px 12px;
 }
 
-/* ---------- Plan page ---------- */
+/*Plan page*/
 .plan-layout {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -634,7 +634,7 @@ input[type="range"] {
   font-size: 13px;
 }
 
-/* ---------- Login page ---------- */
+/*Login page*/
 .login-wrapper {
   min-height: 100vh;
   display: flex;
@@ -677,7 +677,7 @@ input[type="range"] {
   margin-bottom: 28px;
 }
 
-/* ---------- Responsive ---------- */
+/*Responsive*/
 @media (max-width: 768px) {
   .stat-grid          { grid-template-columns: 1fr 1fr; }
   .dashboard-grid     { grid-template-columns: 1fr; }

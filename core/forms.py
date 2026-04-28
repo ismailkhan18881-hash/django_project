@@ -11,13 +11,12 @@ from django import forms
 from .models import Profile, ProgressLog
 
 
-# ─────────────────────────────────────────────
+
 # FORM: QuestionnaireForm
 # This is the main 15 question form that new users
 # fill in when they first sign up.
 # It maps directly to the fields on the Profile model.
 # I use ModelForm so Django handles the saving automatically.
-# ─────────────────────────────────────────────
 
 class QuestionnaireForm(forms.ModelForm):
 
@@ -114,13 +113,13 @@ class QuestionnaireForm(forms.ModelForm):
         }
 
 
-# ─────────────────────────────────────────────
+# 
 # FORM: ProfileForm
 # This is the shorter update form shown on the profile page.
 # Users come here after completing the questionnaire
 # if they want to update their details.
 # It only shows the most important fields rather than all 15 questions.
-# ─────────────────────────────────────────────
+# 
 
 class ProfileForm(forms.ModelForm):
 
@@ -158,12 +157,12 @@ class ProfileForm(forms.ModelForm):
         }
 
 
-# ─────────────────────────────────────────────
+# 
 # FORM: ProgressLogForm
 # This is the daily logging form used on the log progress page
 # and also in the quick log section on the dashboard.
 # Users fill this in every day to record how they are doing.
-# ─────────────────────────────────────────────
+# 
 
 class ProgressLogForm(forms.ModelForm):
 

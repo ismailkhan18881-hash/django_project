@@ -3,14 +3,13 @@
 
 {% block content %}
 
-<!-- ── RE-ENGAGEMENT REMINDER BANNERS ────────────────────────────────
+<!-- RE-ENGAGEMENT REMINDER BANNERS 
      These banners only show if the user has not logged recently.
      The reminder_level variable comes from get_reminder_level() in views.py.
      Level 1 = 7 days away (gentle blue banner)
      Level 2 = 14 days away (amber warning banner)
      Level 3 = 30 days away (red urgent banner with their quit reason)
-     None = user is active so no banner is shown
-──────────────────────────────────────────────────────────────────── -->
+     None = user is active so no banner is shown -->
 
 {% if reminder_level == 1 %}
   <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:12px;
@@ -106,7 +105,7 @@
 {% endif %}
 
 
-<!-- ── WELCOME HEADER ─────────────────────────────────────────────────── -->
+<!-- WELCOME HEADER -->
 <div class="welcome-card">
   <h1>Welcome back,
     <span>{{ request.user.first_name|default:"there" }}</span>
@@ -115,7 +114,7 @@
 </div>
 
 
-<!-- ── STAT CARDS ─────────────────────────────────────────────────────── -->
+<!-- STAT CARDS -->
 <div class="stat-grid">
 
   <div class="stat-card">
@@ -145,7 +144,7 @@
 </div>
 
 
-<!-- ── MOTIVATIONAL MESSAGE ───────────────────────────────────────────── -->
+<!-- MOTIVATIONAL MESSAGE -->
 {% if motivation %}
 <div style="background:linear-gradient(135deg, #f0f4ff, #faf0ff);
             border:1px solid #e0e7ff; border-radius:16px;
@@ -224,7 +223,7 @@
 {% endif %}
 
 
-<!-- ── PROGRESS CHART AND MILESTONE CARD ─────────────────────────────── -->
+<!-- PROGRESS CHART AND MILESTONE CARD -->
 <div class="dashboard-grid" style="margin-bottom:20px;">
 
   <div class="card">
@@ -272,7 +271,7 @@
 </div>
 
 
-<!-- ── TODAY'S EXERCISES AND QUICK LOG ───────────────────────────────── -->
+<!-- TODAY'S EXERCISES AND QUICK LOG -->
 <div class="dashboard-grid-3" style="margin-bottom:20px;">
 
   <div class="card">
@@ -354,10 +353,10 @@
 </div>
 
 
-<!-- ── ACHIEVEMENT BADGES ─────────────────────────────────────────────
+<!--ACHIEVEMENT BADGES 
      Each badge key gets its own emoji.
-     Easier badges get simpler emojis, harder badges get awards.
-──────────────────────────────────────────────────────────────────── -->
+     Easier badges get simpler emojis harder badges get awards.
+-->
 <div class="card" style="margin-bottom:20px;">
   <h3 style="font-size:16px; font-weight:700; margin-bottom:16px;">
     Your Achievements
@@ -383,7 +382,7 @@
           {% endif %}
         </div>
 
-        <!-- Full badge name -->
+        <!---> Full badge name -->
         <div style="font-size:13px; font-weight:600;
                     color:{% if badge.earned %}#15803d{% else %}#9ca3af{% endif %};">
           {{ badge.label }}
@@ -411,7 +410,7 @@
 </div>
 
 
-<!-- ── CHART.JS SCRIPT ────────────────────────────────────────────────── -->
+<!-- CHART.JS SCRIPT-->
 {% if chart_labels %}
 <script>
   const ctx = document.getElementById('progressChart').getContext('2d');

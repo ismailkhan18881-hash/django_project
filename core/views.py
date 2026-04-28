@@ -19,14 +19,11 @@ from .forms import ProfileForm, ProgressLogForm, QuestionnaireForm
 from .utils import generate_exercise_plan, calculate_score
 from .models import Profile, ProgressLog, Achievement
 
-
-# ─────────────────────────────────────────────
 # HELPER FUNCTION: check_and_award_badges
 # This runs every time the dashboard loads.
 # It checks if the user has earned any new badges
 # and saves them to the database if they have.
 # I use get_or_create so a badge is never awarded twice.
-# ─────────────────────────────────────────────
 
 def check_and_award_badges(user, all_logs, days_smoke_free, total_money_saved):
 
@@ -84,12 +81,10 @@ def check_and_award_badges(user, all_logs, days_smoke_free, total_money_saved):
             award("dedicated")
 
 
-# ─────────────────────────────────────────────
 # HELPER FUNCTION: get_reminder_level
 # Works out how many days since the user last logged
 # and returns a number telling us which reminder to show.
 # Returns None if the user has logged recently so no reminder is needed.
-# ─────────────────────────────────────────────
 
 def get_reminder_level(last_log):
 
@@ -111,12 +106,10 @@ def get_reminder_level(last_log):
         return None  # user is active so no reminder needed
 
 
-# ─────────────────────────────────────────────
 # HELPER FUNCTION: get_motivational_content
 # Generates a personalised motivational message for the dashboard.
 # The tone depends on how the user said they felt in question 15.
 # The health statistic depends on how many days smoke free they are.
-# ─────────────────────────────────────────────
 
 def get_motivational_content(days_smoke_free, profile, craving_level):
 
@@ -171,13 +164,10 @@ def get_motivational_content(days_smoke_free, profile, craving_level):
         "craving_tip": craving_tip,
     }
 
-
-# ─────────────────────────────────────────────
 # HELPER FUNCTION: get_dashboard_stats
 # Calculates all the numbers shown on the dashboard stat cards and chart.
 # I put this in a separate function to keep the dashboard view clean
 # and because the same calculations might be useful elsewhere later.
-# ─────────────────────────────────────────────
 
 def get_dashboard_stats(user):
 
@@ -283,7 +273,6 @@ def get_dashboard_stats(user):
     }
 
 
-# ─────────────────────────────────────────────
 # VIEW: register_view
 # Handles new user registration.
 # Uses Django's built in UserCreationForm which enforces:
@@ -292,7 +281,6 @@ def get_dashboard_stats(user):
 # - password cannot be entirely numeric
 # - both passwords must match
 # If the email already exists it prompts them to log in instead.
-# ─────────────────────────────────────────────
 
 def register_view(request):
 
@@ -333,13 +321,11 @@ def register_view(request):
     return render(request, "registration/register.html", {"form": form})
 
 
-# ─────────────────────────────────────────────
 # VIEW: questionnaire_view
 # This is the first page new users see.
 # It shows the 15 question form and saves the answers to the profile.
 # Once completed it marks questionnaire_done as True
 # so the user is never sent here again.
-# ─────────────────────────────────────────────
 
 @login_required
 def questionnaire_view(request):
@@ -367,13 +353,11 @@ def questionnaire_view(request):
     return render(request, "questionnaire.html", {"form": form})
 
 
-# ─────────────────────────────────────────────
 # VIEW: dashboard_view
 # This is the main page of the application.
 # It pulls together all the stats, badges, exercises
 # motivational content and reminder level
 # and passes them all to the dashboard template.
-# ─────────────────────────────────────────────
 
 @login_required
 def dashboard_view(request):
@@ -466,11 +450,9 @@ def dashboard_view(request):
     return render(request, "dashboard.html", context)
 
 
-# ─────────────────────────────────────────────
 # VIEW: profile_view
 # Lets users update their profile details
 # after they have completed the questionnaire.
-# ─────────────────────────────────────────────
 
 @login_required
 def profile_view(request):
@@ -492,11 +474,9 @@ def profile_view(request):
     return render(request, "profile.html", {"form": form})
 
 
-# ─────────────────────────────────────────────
 # VIEW: log_progress
 # The daily logging page where users record
 # how many cigarettes they smoked and their craving level.
-# ─────────────────────────────────────────────
 
 @login_required
 def log_progress(request):
@@ -527,11 +507,8 @@ def log_progress(request):
         "recent_logs": recent_logs,
     })
 
-
-# ─────────────────────────────────────────────
 # VIEW: plan_view
 # The exercise plan page.
-# ─────────────────────────────────────────────
 
 @login_required
 def plan_view(request):

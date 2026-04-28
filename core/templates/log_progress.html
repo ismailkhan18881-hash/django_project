@@ -10,12 +10,12 @@
 </div>
 
 
-<!-- ── TODAY'S ENTRY FORM ─────────────────────────────────────────
+<!-- TODAY'S ENTRY FORM
      This form saves to the log_progress view in views.py.
      When submitted it creates a new ProgressLog entry in the database.
      The money_saved field is calculated automatically in the view
      based on how many cigarettes they avoided compared to their baseline.
-──────────────────────────────────────────────────────────────────── -->
+ -->
 <div class="card" style="margin-bottom:24px;">
   <h3 style="font-size:16px; font-weight:700; margin-bottom:20px;">
     Today's Entry
@@ -71,13 +71,13 @@
 </div>
 
 
-<!-- ── RECENT ENTRIES ─────────────────────────────────────────────
+<!-- RECENT ENTRIES 
      Shows the last 10 log entries for this user.
      recent_logs comes from the log_progress view in views.py.
      Each entry shows the date, cigarettes, craving level, and notes.
      The craving badge colour changes based on the craving level:
      Green = Low (0 to 3), Amber = Moderate (4 to 6), Red = High (7 to 10)
-──────────────────────────────────────────────────────────────────── -->
+-->
 <div class="card">
   <h3 style="font-size:16px; font-weight:700; margin-bottom:20px;">
     Recent Entries
@@ -170,11 +170,11 @@
 </div>
 
 
-<!-- ── SLIDER JAVASCRIPT ──────────────────────────────────────────
+<!-- SLIDER JAVASCRIPT 
      This small script makes the craving number update live
      as the user moves the slider left and right.
      Without this the number would stay at the default value.
-──────────────────────────────────────────────────────────────────── -->
+ -->
 <script>
   // Find the range input slider on the page
   const slider = document.querySelector('input[type="range"]');

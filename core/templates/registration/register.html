@@ -1,14 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
 
+<!-- full page wrapper, centres the card vertically and horizontally -->
 <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px;">
+  <!-- white card -->
   <div style="background: white; border-radius: 16px; padding: 40px; width: 100%; max-width: 440px; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
 
+    <!-- page heading -->
     <div style="text-align: center; margin-bottom: 32px;">
       <h1 style="font-size: 28px; font-weight: 700; color: #6c3fc5; margin: 0;">QuitCig</h1>
       <p style="color: #6b7280; margin-top: 6px; font-size: 15px;">Create your free account</p>
     </div>
 
+    <!-- show any error or info messages passed from the view -->
     {% if messages %}
       {% for message in messages %}
         <div style="background: #fef2f2; border: 1px solid #fca5a5; color: #dc2626; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 14px;">
@@ -17,9 +21,11 @@
       {% endfor %}
     {% endif %}
 
+    <!-- registration form, posts to the register view -->
     <form method="POST" action="{% url 'register' %}">
       {% csrf_token %}
 
+      <!-- username field -->
       <div style="margin-bottom: 16px;">
         <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Username</label>
         <input
@@ -31,6 +37,7 @@
         >
       </div>
 
+      <!-- email field, hint shown below if already registered -->
       <div style="margin-bottom: 16px;">
         <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Email address</label>
         <input
@@ -45,6 +52,7 @@
         </p>
       </div>
 
+      <!-- password field with requirements listed below -->
       <div style="margin-bottom: 16px;">
         <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Password</label>
         <input
@@ -61,6 +69,7 @@
         </ul>
       </div>
 
+      <!-- confirm password field -->
       <div style="margin-bottom: 24px;">
         <label style="display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px;">Confirm password</label>
         <input
@@ -72,6 +81,7 @@
         >
       </div>
 
+      <!-- submit button -->
       <button
         type="submit"
         style="width: 100%; padding: 12px; background: #6c3fc5; color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;"
@@ -80,6 +90,7 @@
       </button>
     </form>
 
+    <!-- link back to login for existing users -->
     <p style="text-align: center; margin-top: 20px; font-size: 14px; color: #6b7280;">
       Already have an account?
       <a href="{% url 'login' %}" style="color: #6c3fc5; font-weight: 600; text-decoration: none;">Sign in here</a>
