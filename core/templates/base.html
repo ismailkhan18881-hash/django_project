@@ -13,7 +13,9 @@
 </head>
 <body>
 
-<!-- Navigation bar shown on every page -->
+<!-- Navigation bar only shown to logged-in users -->
+<!-- Anonymous users on login/register pages should not see authenticated nav links -->
+{% if user.is_authenticated %}
 <nav class="navbar">
   <div class="navbar-brand">
     <!-- The logo icon and app name -->
@@ -57,6 +59,7 @@
     </form>
   </div>
 </nav>
+{% endif %}
 
 <!-- Main page wrapper - all page content goes inside here -->
 <div class="page-wrapper">
